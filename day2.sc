@@ -13,20 +13,16 @@ type Report = Seq[Int]
 implicit class ReportOps(report: Report) {
   def without(index: Int): Report = report.patch(index, Seq.empty, 1)
 
+  def add_index_after_last(indices: Seq[Int]) = if !indices.isEmpty then indices :+ (indices.last + 1) else Nil
+  def get_unsafe_indices(signum: Sign): Seq[Int] = add_index_after_last(for
+    (pair, index) <- report.sliding(2).zipWithIndex.toSeq
+    if !pair.is_safe(signum)
+  yield index)
+
   def is_safe_with_tolerance(tolerance: Int): Boolean =
-    def get_unsafe_indices(signum: Sign) = for
-      (pair, index) <- report.sliding(2).zipWithIndex.toSeq
-      if !pair.is_safe(signum)
-    yield index
-
-    val unsafe_indices = Seq(Sign.Increasing, Sign.Decreasing).map(get_unsafe_indices)
-
-    if unsafe_indices.exists(_.isEmpty) then true
-    else if tolerance > 0 then
-      val shortest_unsafe_indices = unsafe_indices.minBy(_.size)
-      val indices_to_try          = shortest_unsafe_indices :+ shortest_unsafe_indices.last + 1
-      indices_to_try.exists(index => report.without(index).is_safe_with_tolerance(tolerance - 1))
-    else false
+    val unsafe_indices = Seq(Sign.Increasing, Sign.Decreasing).map(get_unsafe_indices).minBy(_.size)
+    def is_safe_without(index: Int) = report.without(index).is_safe_with_tolerance(tolerance - 1)
+    unsafe_indices.isEmpty || (tolerance > 0 && unsafe_indices.exists(is_safe_without))
 }
 
 type Pairwise = Seq[Int]
