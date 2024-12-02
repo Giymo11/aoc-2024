@@ -1,12 +1,9 @@
-
 type AocPart = String => String
 
 trait AocDay(day: Int) {
-
   def part1: AocPart
   def part2: AocPart
   
-  @main
   def solve() = 
     val wd = os.pwd / "aoc-input" 
 

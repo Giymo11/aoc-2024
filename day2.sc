@@ -1,13 +1,12 @@
-import os._
 import collection._
 
 import $file.AocDay
 import ammonite.$file.AocDay._
 
-enum Sign(val value: Int) {
-  case Increasing extends Sign(-1)
-  case Decreasing extends Sign(1)
-  case NEUTRAL    extends Sign(0)
+enum Sign {
+  case Increasing
+  case Decreasing
+  case Neutral
 }
 
 type Report = Seq[Int]
@@ -41,8 +40,7 @@ implicit class PairwiseOps(pair: Pairwise) {
     diff >= 1 && diff <= 3
 
   val signum = (a: Int, b: Int) =>
-    import Sign._
-    if a > b then Decreasing else if a < b then Increasing else NEUTRAL
+    if a > b then Sign.Decreasing else if a < b then Sign.Increasing else Sign.Neutral
 }
 
 object Today extends AocDay(2) {
