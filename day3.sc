@@ -9,7 +9,7 @@ implicit class MemoryOps(input: String) {
     val mul_pattern = """(?sx)  # Enable verbose mode, make `.` match newlines
     mul\(       # Match `mul(`
       (\d+)     # Capture first integer
-    ,        # Match `,`
+    ,           # Match `,`
       (\d+)     # Capture second integer
     \)          # Match `)` """.r
     import scala.util.matching.Regex.Match
