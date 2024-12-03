@@ -9,7 +9,7 @@ implicit class MemoryOps(input: String) {
     val mul_pattern = """(?sx)  # Enable verbose mode, make `.` match newlines
     mul\(       # Match `mul(`
       (\d+)     # Capture first integer
-    ,\s*        # Match `, `
+    ,        # Match `,`
       (\d+)     # Capture second integer
     \)          # Match `)` """.r
     import scala.util.matching.Regex.Match
@@ -19,7 +19,7 @@ implicit class MemoryOps(input: String) {
   def remove_disabled =
     val disabled_pattern = """(?sx) # Enable verbose and dot-all mode
     don't\(\)   # Match `don't()`       
-    .*?         # Match anything
+      .*?       # Match anything
     do\(\)      # Match `do()`  """.r
     disabled_pattern.replaceAllIn(input, "")
 }
