@@ -5,7 +5,7 @@ import ammonite.$file.AocDay._
 
 type Mul = Seq[Int]
 implicit class MemoryOps(input: String) {
-  def parse_muls =
+  def parse_muls: Seq[Mul] =
     val mul_pattern = """(?sx)  # Enable verbose mode, make `.` match newlines
     mul\(       # Match `mul(`
       (\d+)     # Capture first integer
@@ -16,7 +16,7 @@ implicit class MemoryOps(input: String) {
     def matches_to_muls = (item: Match) => Seq(item.group(1), item.group(2)).map(_.toInt)
     mul_pattern.findAllMatchIn(input).map(matches_to_muls).toSeq
 
-  def remove_disabled =
+  def remove_disabled: String =
     val disabled_pattern = """(?sx) # Enable verbose and dot-all mode
     don't\(\)   # Match `don't()`       
       .*?       # Match anything
@@ -25,7 +25,7 @@ implicit class MemoryOps(input: String) {
 }
 
 object Today extends AocDay(3) {
-  def eval_muls = (input: Seq[Mul]) => input.map(_.product).sum
+  def eval_muls(input: Seq[Mul]): Int = input.map(_.product).sum
   def part1: AocPart = input => eval_muls(input.parse_muls).toString()
   def part2: AocPart = input => eval_muls(input.remove_disabled.parse_muls).toString()
 }
