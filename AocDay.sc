@@ -1,4 +1,4 @@
-type AocPart = String => String
+type AocPart = String => Any
 
 trait AocDay(day: Int) {
   def part1: AocPart
@@ -15,7 +15,6 @@ trait AocDay(day: Int) {
     println("part1: " + part1(input1))
     println("part2: " + part2(input1))
 }
-
 
 implicit class AocParser(input: String) {
   def as_lines: Seq[String] = input.linesIterator.toSeq
