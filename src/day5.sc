@@ -1,5 +1,5 @@
-import $file.AocDay
-import ammonite.$file.AocDay._
+import $file.^.lib.AocDay
+import AocDay._
 
 type Ordering[T] = Map[T, Seq[T]]
 implicit class OrderingOps[T](ordering: Ordering[T]) {

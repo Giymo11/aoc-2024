@@ -1,3 +1,4 @@
+
 type AocPart = String => Any
 
 trait AocDay(day: Int) {
@@ -5,7 +6,7 @@ trait AocDay(day: Int) {
   def part2: AocPart
 
   def solve() =
-    val wd = os.pwd / "aoc-input"
+    val wd = os.pwd / "input"
 
     val test_input = os.read(wd / s"test$day.txt")
     println(part1(test_input))

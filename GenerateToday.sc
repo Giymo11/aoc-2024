@@ -20,5 +20,5 @@ def generate_today(day: Int, test_input: String): Unit =
   }
   val content = os.read(template_path).replace("{{day}}", day.toString)
 
-  write_to_file(os.pwd, filename, content)
-  write_to_file(os.pwd / "aoc-input", s"test$day.txt", test_input)
+  write_to_file(os.pwd / "src", filename, content)
+  write_to_file(os.pwd / "input", s"test$day.txt", test_input)

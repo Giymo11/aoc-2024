@@ -4,3 +4,4 @@
 .metals
 *build
 *out
+*input
