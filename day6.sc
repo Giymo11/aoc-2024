@@ -1,5 +1,8 @@
 import scala.annotation.tailrec
 
+import $ivy.`org.scala-lang.modules::scala-parallel-collections:1.0.4`
+import scala.collection.parallel.CollectionConverters._
+
 import $file.lib.AocDay
 import AocDay._
 
@@ -26,7 +29,7 @@ object Today extends AocDay(6) {
   def part2: AocPart = input =>
     val grid = input.as_grid.toMap
     val start = grid.find(_._2 == '^').map(_._1).get
-    grid.visitedCoordsFrom(start).count(tile => (grid + (tile -> '#')).isLoopFrom(start))
+    grid.visitedCoordsFrom(start).par.count(tile => (grid + (tile -> '#')).isLoopFrom(start))
 }
 
 @main
