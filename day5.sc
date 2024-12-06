@@ -1,17 +1,14 @@
-import $file.^.lib.AocDay
+import $file.lib.AocDay
 import AocDay._
 
-type Ordering[T] = Map[T, Seq[T]]
-implicit class OrderingOps[T](ordering: Ordering[T]) {
-  def isOrderedDirectly(a: T, other: T): Boolean = ordering(a).contains(other)
+extension [T](ordering: Map[T, Seq[T]])
   def isIndirectConflict(a: T, other: T) =
     ordering(other).exists(another => ordering.isOrdered(another, a))
   def isOrdered(a: T, other: T): Boolean =
-    !ordering(other).contains(a) && (isOrderedDirectly(a, other) || !isIndirectConflict(a, other))
+    !ordering(other).contains(a) && (ordering(a).contains(other) || !isIndirectConflict(a, other))
   def isSequenceValid(update: Seq[T]) = update.sliding(2).forall { case Seq(a, other) =>
     ordering.isOrdered(a, other)
   }
-}
 
 object Today extends AocDay(5) {
   def parseInput(input: String) =
