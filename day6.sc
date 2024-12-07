@@ -9,27 +9,42 @@ import AocDay._
 import $file.lib.Neighborhoods
 import Neighborhoods._
 
-type Visits = Set[(Coord, (Int, Int))]
+type Visit = (Coord, (Int, Int))
+extension (visit: Visit)
+  def next = (visit._1 + visit._2, visit._2)
+  def coords = visit._1
+
+type Visits = Set[Visit]
 extension (grid: Map[Coord, Char])
-  @tailrec def walkFrom(position: Coord, direction: (Int, Int), visits: Visits): (Visits, Boolean) =
-    val nextVisit = (position + direction, direction)
-    if visits.contains(nextVisit) then (visits, true) // its a loop
-    else if !grid.contains(nextVisit._1) then (visits, false) // not a loop
-    else if grid(nextVisit._1) == '#' then walkFrom(position, direction.clockwise, visits)
-    else walkFrom(nextVisit._1, direction, visits + nextVisit)
-  def visitedCoordsFrom(start: Coord) = grid.walkFrom(start, Direction.up, Set())._1.map(_._1)
-  def isLoopFrom(start: Coord) = grid.walkFrom(start, Direction.up, Set())._2
+  def step(current: Visit) = current.next match
+    case (coords, _) if !grid.contains(coords)      => None
+    case (coords, direction) if grid(coords) == '#' => Some(current.coords, direction.clockwise)
+    case nextVisit                                  => Some(nextVisit)
+
+  @tailrec def walk(current: Visit, visited: Set[Coord]): Set[Coord] = step(current) match
+    case Some(nextVisit) => walk(nextVisit, visited + nextVisit.coords)
+    case None            => visited
+
+  @tailrec def isLooping(current: Visit, visited: Visits = Set()): Boolean = step(current) match
+    case Some(nextVisit) if visited.contains(nextVisit) => true
+    case Some(nextVisit)                                => isLooping(nextVisit, visited + nextVisit)
+    case None                                           => false
 
 object Today extends AocDay(6) {
+  def render(input: String, visited: Set[Coord]) =
+    val (rows, cols) = (input.as_lines(0).size, input.as_lines.size)
+    val marked = input.as_grid.map((coord, char) => if visited.contains(coord) then 'X' else char)
+    marked.sliding(rows, cols).map(_.mkString).mkString("\n")
+
   def part1: AocPart = input =>
     val grid = input.as_grid.toMap
-    val start = grid.find(_._2 == '^').map(_._1).get
-    grid.visitedCoordsFrom(start).size + 1 // add start position
+    val startPosition = grid.find(_._2 == '^').map(_._1).get
+    grid.walk((startPosition, Direction.up), Set(startPosition)).size
 
   def part2: AocPart = input =>
     val grid = input.as_grid.toMap
-    val start = grid.find(_._2 == '^').map(_._1).get
-    grid.visitedCoordsFrom(start).par.count(tile => (grid + (tile -> '#')).isLoopFrom(start))
+    val start = (grid.find(_._2 == '^').map(_._1).get, Direction.up)
+    grid.walk(start, Set.empty).par.count(tile => (grid + (tile -> '#')).isLooping(start))
 }
 
 @main

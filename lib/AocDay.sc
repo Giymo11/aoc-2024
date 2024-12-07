@@ -5,6 +5,14 @@ trait AocDay(day: Int) {
   def part1: AocPart
   def part2: AocPart
 
+  def benchmark[T](block: => T): (T, String) = {
+    val start_time = System.nanoTime()
+    val result = block
+    val end_time = System.nanoTime()
+    val diff_in_ms = (end_time - start_time) / 1e6
+    (result, f" in $diff_in_ms%11f ms")
+  }
+
   def solve() =
     val wd = os.pwd / "input"
 
@@ -12,9 +20,9 @@ trait AocDay(day: Int) {
     println(part1(test_input))
     println(part2(test_input))
 
-    val input1 = os.read(wd / s"input$day.txt")
-    println("part1: " + part1(input1))
-    println("part2: " + part2(input1))
+    val big_input = os.read(wd / s"input$day.txt")
+    println("part1: " + benchmark(part1(big_input)))
+    println("part2: " + benchmark(part2(big_input)))
 }
 
 implicit class AocParser(input: String) {
