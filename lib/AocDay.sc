@@ -28,9 +28,9 @@ trait AocDay(day: Int) {
 implicit class AocParser(input: String) {
   def as_lines: Seq[String] = input.linesIterator.toSeq
 
-  def as_integers: Seq[Int] =
+  def as_integers: Seq[Long] =
     val integer_pattern = """\d+""".r
-    integer_pattern.findAllIn(input).map(_.toInt).toSeq
+    integer_pattern.findAllIn(input).map(_.toLong).toSeq
 
   def as_grid: Seq[((Int, Int), Char)] = for {
     (line, row_index) <- input.as_lines.zipWithIndex
