@@ -1,5 +1,7 @@
-
 type AocPart = String => Any
+
+import $file.Neighborhoods
+import Neighborhoods._
 
 trait AocDay(day: Int) {
   def part1: AocPart
@@ -36,4 +38,9 @@ implicit class AocParser(input: String) {
     (line, row_index) <- input.as_lines.zipWithIndex
     (char, col_index) <- line.zipWithIndex
   } yield ((row_index, col_index), char)
+
+  def renderVisited(visited: Set[Coord], mark: Char) =
+    val (rows, cols) = (input.as_lines(0).size, input.as_lines.size)
+    val marked = input.as_grid.map((coord, char) => if visited.contains(coord) then mark else char)
+    marked.sliding(rows, cols).map(_.mkString).mkString("\n")
 }

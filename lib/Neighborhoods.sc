@@ -4,6 +4,9 @@ type Neighborhood = Seq[Coord]
 extension (coord: Coord) {
   def +(other: Coord): Coord = (coord._1 + other._1, coord._2 + other._2)
   def *(other: Int): Coord = (coord._1 * other, coord._2 * other)
+  def unary_- : Coord = (-coord._1, -coord._2)
+  def -(other: Coord): Coord = coord + -other
+  def <(other: Coord): Boolean = coord._1 < other._1 && coord._2 < other._2
   def clockwise: Coord = (coord._2, -coord._1)
 }
 
