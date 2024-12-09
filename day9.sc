@@ -9,10 +9,10 @@ object Today extends AocDay(9) {
     def space = block._1
     def id = block._2
     def shrink(step: Int): Block = (block.space - step, block.id)
-    def shrinkBy(other: Block) =
+    def shrinkBy(other: Block): Seq[Block] =
       if block.space > other.space then Vector(block.shrink(other.space)) else Vector()
 
-  @tailrec def compactBlocks(blocks: Vector[Block], cum: Seq[Block]): Seq[Block] = blocks match
+  @tailrec def compactBlocks(blocks: Seq[Block], cum: Seq[Block]): Seq[Block] = blocks match
     case init :+ last if last.id.isEmpty   => compactBlocks(init, cum)
     case head +: tail if head.id.isDefined => compactBlocks(tail, cum :+ head)
     case head +: middle :+ last =>
@@ -20,7 +20,7 @@ object Today extends AocDay(9) {
       compactBlocks(newBlocks, cum :+ (Math.min(head.space, last.space), last.id))
     case _ => cum
 
-  @tailrec def compactFiles(blocks: Vector[Block], cum: Seq[Block]): Seq[Block] = blocks match
+  @tailrec def compactFiles(blocks: Seq[Block], cum: Seq[Block]): Seq[Block] = blocks match
     case init :+ last if last.id.isEmpty => compactFiles(init, (last.space, None) +: cum)
     case init :+ last =>
       findEmptySpace(init, last) match
@@ -28,11 +28,11 @@ object Today extends AocDay(9) {
         case Some(updatedBlocks) => compactFiles(updatedBlocks, (last.space, None) +: cum)
     case _ => cum
 
-  def findEmptySpace(blocks: Vector[Block], other: Block): Option[Vector[Block]] =
+  def findEmptySpace(blocks: Seq[Block], other: Block): Option[Seq[Block]] =
     val emptyAt = blocks.indices.find(i => blocks(i).id.isEmpty && blocks(i).space >= other.space)
     emptyAt.map(i => (blocks.take(i) :+ other) ++ blocks(i).shrinkBy(other) ++ blocks.drop(i + 1))
 
-  def parseAsBlocks(input: String): Vector[Block] =
+  def parseAsBlocks(input: String): Seq[Block] =
     val inputGroupedWithId = input.split("").map(_.toInt).toSeq.grouped(2).zipWithIndex
     inputGroupedWithId.toVector.flatMap:
       case (Seq(fileBlock, emptyBlock), id) => Seq((fileBlock, Some(id)), (emptyBlock, None))
@@ -40,9 +40,9 @@ object Today extends AocDay(9) {
   def renderBlocks(blocks: Seq[Block]) = blocks.flatMap(b => List.fill(b.space)(b.id.getOrElse(0)))
   def checksum(blocks: Seq[Block]) = renderBlocks(blocks).zipWithIndex.map(_.toLong * _).sum
 
-  def part1: AocPart = input => checksum(compactBlocks(parseAsBlocks(input), List.empty))
+  def part1: AocPart = input => checksum(compactBlocks(parseAsBlocks(input), Vector.empty))
 
-  def part2: AocPart = input => checksum(compactFiles(parseAsBlocks(input), List.empty))
+  def part2: AocPart = input => checksum(compactFiles(parseAsBlocks(input), Vector.empty))
 }
 
 @main def main(): Unit = Today.solve()
