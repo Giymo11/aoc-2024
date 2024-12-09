@@ -5,38 +5,39 @@ import scala.annotation.tailrec
 
 object Today extends AocDay(9) {
   type IdRanges = Seq[(Int, Int, Int)]
-  extension (numbers: Seq[Int])
-    def toRanges(index: Int, id: Int, cum: IdRanges, isEmpty: Boolean): IdRanges = numbers match
-      case Nil                       => cum
-      case head +: tail if head == 0 => tail.toRanges(index, id, cum, !isEmpty)
-      case head +: tail =>
-        val nextIndex = index + head
-        if isEmpty then tail.toRanges(nextIndex, id, cum :+ (index, nextIndex - 1, -1), !isEmpty)
-        else tail.toRanges(nextIndex, id + 1, cum :+ (index, nextIndex - 1, id), !isEmpty)
 
-  def moveBlocks(dst: IdRanges, src: IdRanges, cum: IdRanges): IdRanges = (dst, src) match
-    case ((dstHead @ (dstFrom, dstTo, dstId)) +: dstTail, (srcFrom, srcTo, srcId) +: srcTail) =>
-      if dstFrom >= srcFrom then cum
-      else if dstId != -1 && dstTo < srcFrom then moveBlocks(dstTail, src, cum :+ dstHead)
-      else if srcId == -1 then moveBlocks(dst, srcTail, cum)
-      else
-        val (srcSize, dstSize) = (srcTo - srcFrom + 1, dstTo - dstFrom + 1)
-        val step = Math.min(dstSize, srcSize)
-        val newDst = if (dstSize > step) (dstFrom + step, dstTo, dstId) +: dstTail else dstTail
-        val newSrc = if (srcSize > step) (srcFrom + step, srcTo, srcId) +: srcTail else srcTail
-        moveBlocks(newDst, newSrc, cum :+ (dstFrom, dstFrom + step - 1, srcId))
+  type Block = (Int, Option[Int])
+  extension (block: Block)
+    def space = block._1
+    def id = block._2
+    def shrink(step: Int) = (block.space - step, block.id)
 
-  def checksum(from: Int, to: Int, id: Int): Long = (from to to).map(_ * id.toLong).sum
-
-  def render(compacted: IdRanges) =
-    compacted.flatMap((from, to, id) => (from to to).map(_ => id)).mkString
+  def compactBlocks(blocks: Vector[Block], cum: List[Block]): List[Block] = blocks match
+    case init :+ last if last.id.isEmpty   => compactBlocks(init, cum)
+    case head +: tail if head.id.isDefined => compactBlocks(tail, cum :+ head)
+    case head +: middle :+ last =>
+      val step = Math.min(head.space, last.space)
+      val newBlocks =
+        if head.space > last.space then head.shrink(step) +: middle
+        else if head.space < last.space then middle :+ last.shrink(step)
+        else middle
+      compactBlocks(newBlocks, cum :+ (step, last.id))
+    case _ => cum
 
   def part1: AocPart = input =>
-    val numbers = input.split("").map(_.toInt)
+    val numbers = input.split("").map(_.toInt).toSeq
+    val ranges: Vector[Block] = numbers.grouped(2).zipWithIndex.toVector.flatMap {
+      case (Seq(fileBlock, emptyBlock), id) => Seq((fileBlock, Some(id)), (emptyBlock, None))
+      case (Seq(fileBlock), id)             => Seq((fileBlock, Some(id)))
+    }
 
-    val ranges = numbers.toSeq.toRanges(0, 0, Seq.empty, false)
-    val compacted = moveBlocks(ranges, ranges.reverse, Seq.empty)
-    compacted.map(checksum).sum
+    def renderBlocks(blocks: Seq[Block]) =
+      blocks.flatMap(block => List.fill(block.space)(block._2.getOrElse(0)))
+
+    def checksum(blocks: Seq[Block]) = renderBlocks(blocks).zipWithIndex.map(_.toLong * _).sum
+
+    val compacted = compactBlocks(ranges, List.empty)
+    checksum(compacted)
 
   def part2: AocPart = input => ""
 }
