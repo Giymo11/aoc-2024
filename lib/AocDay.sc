@@ -14,6 +14,11 @@ trait AocDay(day: Int) {
     val diff_in_ms = (end_time - start_time) / 1e6
     (result, f" in $diff_in_ms%11f ms")
   }
+  
+  def memo[K, V](realFn: K => V): K => V = {
+    val cache = collection.mutable.Map.empty[K, V]
+    k => cache.getOrElseUpdate(k, realFn(k))
+  }
 
   def solve() =
     val wd = os.pwd / "input"
