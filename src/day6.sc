@@ -1,13 +1,4 @@
-import scala.annotation.tailrec
-
-import $ivy.`org.scala-lang.modules::scala-parallel-collections:1.0.4`
 import scala.collection.parallel.CollectionConverters._
-
-import $file.lib.AocDay
-import AocDay._
-
-import $file.lib.Neighborhoods
-import Neighborhoods._
 
 type Visit = (Coord, (Int, Int))
 extension (visit: Visit)
@@ -47,5 +38,4 @@ object Today extends AocDay(6) {
     grid.walk(start, Set.empty).par.count(tile => (grid + (tile -> '#')).isLooping(start))
 }
 
-@main
-def main(): Unit = Today.solve()
+Today.solve()

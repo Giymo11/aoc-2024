@@ -1,8 +1,5 @@
 type AocPart = String => Any
 
-import $file.Neighborhoods
-import Neighborhoods._
-
 trait AocDay(day: Int) {
   def part1: AocPart
   def part2: AocPart
@@ -14,7 +11,7 @@ trait AocDay(day: Int) {
     val diff_in_ms = (end_time - start_time) / 1e6
     (result, f" in $diff_in_ms%11f ms")
   }
-  
+
   def memo[K, V](realFn: K => V): K => V = {
     val cache = collection.mutable.Map.empty[K, V]
     k => cache.getOrElseUpdate(k, realFn(k))
@@ -32,7 +29,7 @@ trait AocDay(day: Int) {
     println("part2: " + benchmark(part2(big_input)))
 }
 
-implicit class AocParser(input: String) {
+extension (input: String) {
   def as_lines: Seq[String] = input.linesIterator.toSeq
 
   def as_integers: Seq[Long] =
@@ -44,8 +41,12 @@ implicit class AocParser(input: String) {
     (char, col_index) <- line.zipWithIndex
   } yield ((row_index, col_index), char)
 
+  def as_board: Map[(Int, Int), Char] = as_grid.toMap.withDefaultValue('.')
+
   def renderVisited(visited: Set[Coord], mark: Char) =
     val (rows, cols) = (input.as_lines(0).size, input.as_lines.size)
     val marked = input.as_grid.map((coord, char) => if visited.contains(coord) then mark else char)
     marked.sliding(rows, cols).map(_.mkString).mkString("\n")
 }
+
+extension [T](seq: Iterable[T]) def sumBy(f: T => Int) = seq.foldLeft(0)(_ + f(_))

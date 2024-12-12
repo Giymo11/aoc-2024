@@ -1,8 +1,3 @@
-import $file.lib.AocDay
-import AocDay._
-
-import $file.lib.Neighborhoods
-import Neighborhoods._
 
 object Today extends AocDay(8) {
   def part1: AocPart = input =>
@@ -24,4 +19,4 @@ object Today extends AocDay(8) {
     antennas.values.map(_.toSeq.combinations(2).flatMap(findAllAntinodes).toSet).reduce(_ | _).size
 }
 
-@main def main(): Unit = Today.solve()
+Today.solve()

@@ -1,5 +1,3 @@
-import $file.lib.AocDay
-import AocDay._
 
 object Today extends AocDay(7) {
   type Operator = (Long, Long) => Long
@@ -19,4 +17,4 @@ object Today extends AocDay(7) {
     input.as_lines.map(_.as_integers).filter(_.checkWith(operators)).map(_.head).sum
 }
 
-@main def main(): Unit = Today.solve()
+Today.solve()

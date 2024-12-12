@@ -1,9 +1,3 @@
-import $file.AocDay
-import ammonite.$file.AocDay._
-
-import $file.Neighborhoods
-import ammonite.$file.Neighborhoods._
-
 object Today extends AocDay(4) {
   def part1: AocPart = input =>
     val grid = input.as_grid.toMap.withDefaultValue('.')
@@ -21,5 +15,4 @@ object Today extends AocDay(4) {
     candidates.count(Seq("MSMS", "SMSM", "MMSS", "SSMM").contains).toString
 }
 
-@main
-def main(): Unit = Today.solve()
+Today.solve()

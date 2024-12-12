@@ -1,8 +1,5 @@
 import collection._
 
-import $file.AocDay
-import ammonite.$file.AocDay._
-
 type Mul = Seq[Int]
 implicit class MemoryOps(input: String) {
   def parse_muls: Seq[Mul] =
@@ -30,5 +27,4 @@ object Today extends AocDay(3) {
   def part2: AocPart = input => eval_muls(input.remove_disabled.parse_muls).toString()
 }
 
-@main
-def main() = Today.solve()
+Today.solve()

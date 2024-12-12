@@ -1,8 +1,5 @@
 import collection._
 
-import $file.AocDay
-import ammonite.$file.AocDay._
-
 enum Sign {
   case Increasing
   case Decreasing
@@ -52,5 +49,4 @@ object Today extends AocDay(2) {
     reports.count(_.is_safe_with_tolerance(1)).toString
 }
 
-@main
-def main() = Today.solve()
+Today.solve()

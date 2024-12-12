@@ -1,8 +1,3 @@
-// to run this script: amm -watch day-1.sc
-
-import $file.AocDay
-import ammonite.$file.AocDay._
-
 object Today extends AocDay(1) {
 
   def part2: AocPart = input =>
@@ -28,5 +23,4 @@ object Today extends AocDay(1) {
       .unzip
 }
 
-@main
-def main(): Unit = Today.solve()
+Today.solve()

@@ -1,5 +1,3 @@
-import $file.lib.AocDay
-import AocDay._
 
 extension [T](ordering: Map[T, Seq[T]])
   def isIndirectConflict(a: T, other: T) =
@@ -30,5 +28,4 @@ object Today extends AocDay(5) {
     invalidUpdates.map(_.sortWith(ordering.isOrdered)).map(middleElement).sum
 }
 
-@main
-def main(): Unit = Today.solve()
+Today.solve()

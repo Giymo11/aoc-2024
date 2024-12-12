@@ -1,5 +1,3 @@
-import $file.lib.AocDay
-import AocDay._
 
 import scala.annotation.tailrec
 
@@ -33,7 +31,7 @@ object Today extends AocDay(9) {
     emptyAt.map(i => (blocks.take(i) :+ other) ++ blocks(i).shrinkBy(other) ++ blocks.drop(i + 1))
 
   def parseAsBlocks(input: String): Seq[Block] =
-    val inputGroupedWithId = input.split("").map(_.toInt).toSeq.grouped(2).zipWithIndex
+    val inputGroupedWithId = input.split("").filter(_ != "").map(_.toInt).toSeq.grouped(2).zipWithIndex
     inputGroupedWithId.toVector.flatMap:
       case (Seq(fileBlock, emptyBlock), id) => Seq((fileBlock, Some(id)), (emptyBlock, None))
       case (Seq(fileBlock), id)             => Seq((fileBlock, Some(id)))
@@ -45,4 +43,4 @@ object Today extends AocDay(9) {
   def part2: AocPart = input => checksum(compactFiles(parseAsBlocks(input), Vector.empty))
 }
 
-@main def main(): Unit = Today.solve()
+Today.solve()

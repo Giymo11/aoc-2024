@@ -1,8 +1,3 @@
-import $file.lib.AocDay
-import AocDay._
-
-import $file.lib.Neighborhoods
-import Neighborhoods._
 
 object Today extends AocDay(10) {
   def parseHikingMap(input: String): (Map[Coord, Char], Seq[Coord]) =
@@ -23,4 +18,4 @@ object Today extends AocDay(10) {
     startCoords.map(grid.getHikingTrailsFrom(_)).map(_.size).sum
 }
 
-@main def main(): Unit = Today.solve()
+Today.solve()
