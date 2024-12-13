@@ -1,5 +1,7 @@
 type AocPart = String => Any
 
+import pprint._
+
 trait AocDay(day: Int) {
   def part1: AocPart
   def part2: AocPart
@@ -20,13 +22,13 @@ trait AocDay(day: Int) {
   def solve() =
     val wd = os.pwd / "input"
 
-    val test_input = os.read(wd / s"test$day.txt")
-    println(part1(test_input))
-    println(part2(test_input))
+    val test_input = os.read(wd / s"test$day.txt").replace("\r\n", "\n")
+    pprintln(part1(test_input))
+    pprintln(part2(test_input))
 
-    val big_input = os.read(wd / s"input$day.txt")
-    println("part1: " + benchmark(part1(big_input)))
-    println("part2: " + benchmark(part2(big_input)))
+    val big_input = os.read(wd / s"input$day.txt").replace("\r\n", "\n")
+    pprintln("part1: " + benchmark(part1(big_input)))
+    pprintln("part2: " + benchmark(part2(big_input)))
 }
 
 extension (input: String) {
